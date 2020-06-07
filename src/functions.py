@@ -2,6 +2,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import glob
 from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve, auc
 
 def preprocess_image(image, imgage_shape=[100,100]):
@@ -13,6 +14,21 @@ def preprocess_image(image, imgage_shape=[100,100]):
 def load_and_preprocess_image(path):
     image = tf.io.read_file(path)
     return preprocess_image(image)
+
+def import_dataset(img_path, data_path):
+    img_url = sorted(glob.glob(img_path+"/*.jpg"))
+    csv_names = [i for i in glob.glob(data_path+'/*.csv')]
+    df = pd.concat([pd.read_csv(f) for f in csv_names]).sort_values('name').reset_index(drop=True)
+    df['image'] = img_url
+    return df
+
+def clean_dataset(df):
+    dataset = df.copy()
+    dataset = dataset[['meta.clinical.diagnosis', 'image']]
+    dataset = dataset[dataset['meta.clinical.diagnosis'].notna()].reset_index(drop=True)
+    dataset.columns = ['diagnosis', 'image']
+    dataset['diagnosis'] = (dataset['diagnosis'] == 'melanoma').astype(int)
+    return dataset
 
 def create_X_y(df):
     y = df['diagnosis']
