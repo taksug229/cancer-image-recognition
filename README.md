@@ -113,7 +113,7 @@ This random model was missing most of the cancerous images and fell extremely sh
 ### Transfer Learning
 
 After numerous repetition on building/editing my convolutional neural network, I ended up  
-incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I remove the last 2 layers with my model with a `sigmoid` activation. You can view the code [here](2.&#32;All&#32;Data&#32;Modeling) for details. 
+incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I remove the last 2 layers with my model with a `sigmoid` activation. You can view the code [here](1.&#32;Modeling.ipynb) for details. 
 
 Here are the accuracy, loss, and recall score after each epoch. With my current AWS instance, each epoch took me about 5.5 minutes so with 20 epochs, it took me about 2 hours to run. 
 
@@ -134,19 +134,19 @@ My transfer learning model got an area under the curve (AUC) score of **0.882**.
 ![ROC AUC](img/roc_auc.png)
 
 ### Precision-Recall Curve
-The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls higher than 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that recall >= 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
+The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls >= 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that recall >= 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
 
 
 ![Precision-Recall Curve](img/pr_curve.png)
 
 ### F1 Score
-In order to confirm I was choosing the best threshold, I plotted all of the F1 scores with a recall >= 95%. Once my recall was above 95%, I wanted to choose a threshold that gave me the highest F1 score to keep balance of the image classification. The red mark had the highest F1 score when my model had a threshold of **0.022247791** (same as the most liberal threshold). 
+In order to confirm I was choosing the best threshold, I plotted all of the F1 scores. The area highlighted in red are all recalls >= 95%. Once my recall was above 95%, I wanted to choose a threshold that gave me the highest F1 score to keep balance of the image classification. The location on the orange star gave me the highest F1 score given that recall >= 95% with a threshold of **0.022247791** (same as the most liberal threshold). 
 
 ![F1 Scores](img/f1.png)
 
 
 ### Confusion Matrix
-Using my final threshold of **0.022247791**, I’ve got my results as below. 
+Using my final threshold of **0.022247791**, I’ve got my results as shown below. 
 
 
 ![Final CNN](img/final_CNN.png)
