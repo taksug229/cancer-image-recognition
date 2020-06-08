@@ -146,12 +146,11 @@ In order to confirm I was choosing the best threshold, I plotted all of the F1 s
 
 
 ### Confusion Matrix
-Using my final threshold of **0.022247791**, I’ve computed the confusion matrix and got my results as below. 
+Using my final threshold of **0.022247791**, I’ve got my results as below. 
 
 
 ![Final CNN](img/final_CNN.png)
 
-My final recall, precision, F1 score, accurcay are listed below.
 
 | Metric     | Score |
 | ---------- | ----- |
