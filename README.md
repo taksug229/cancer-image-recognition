@@ -13,18 +13,19 @@
 
 2. [Exploratory Data Analysis](#exploratory-data-analysis)
     - [Sample images](#sample-images)
-    - [Unbalanced Data](#unbalanced-data)
+    - [Imbalanced Data](#imbalanced-data)
 
 
 3. [Pipeline](#pipeline)
     - [Base Model](#base-model)
-    - [Basic Pipeline](#basic-pipeline)
+<!--     - [Basic Pipeline](#basic-pipeline) -->
     - [Transfer Learning](#transfer-learning)
 
 
 4. [Model Evaluation](#model-evaluation)
     - [ROC AUC Curve](#roc-auc-curve)
-    - [Precision Recall Curve](#precision-recall-curve)
+    - [Precision-Recall Curve](#precision-recall-curve)
+    - [F1 Score](#f1-score)
     - [Confusion Matrix](#confusion-matrix)
     - [Application](#application)
 
@@ -59,63 +60,97 @@ After scrapping the images, I ended up having 53 GB worth of images with a [meta
 
 #### Data Cleaning
 The images had inconsistent sizes so I resized them all to 100 x 100 pixel dimensions. 
+
 I split my training and test set with a 80:20 split and ended up with the below ratio.
 
 There were 249 images (roughly 1% of the entire dataset) that didn’t have labels to indicate if the patient had cancer or not.  So I decided to drop those images and ended up with a total of 23,653 images.  
 
-
-
-Insert Before & After 
-- **Train Set: 2000-2018 Seasons (8780 rows, 33 columns)**
-- **Test Set: 2019 Season (530 rows, 33 columns)**
+- **Train Set: 18,922 images**
+- **Test Set: 4,731 images**
 
 ---
 
 ## Exploratory Data Analysis
 
 ### Sample images
+Here are a few samples of cancerous and non-cancerous mole images after resizing. As you can see, it is difficult to distinguish cancerous moles from a human eye. 
 
 
-![Insert sample images]()
-
-### Unbalanced Data
-
-![Unbalanced Data](img/unbalanced.png)
+![Cancer negative](img/cancer_neg.png)
 
 
+![Cancer positive](img/cancer_pos.png)
+
+
+
+### Imbalanced Data
+I quickly realized that my dataset was imbalanced. Roughly 91% were non-cancerous and only 9% were cancerous. This imbalance makes sense because only a small proportion of the population have cancer at a given time. 
+
+
+![Imbalanced Data](img/unbalanced.png)
+
+To work with these imbalanced datasets, I decided to adjust the `class_weights` parameter in the `fit` method in `keras`. If I didn’t have enough images, I may have considered oversampling the minority class by augmenting the images in `keras`.
 
 ---
 
 ## Pipeline
 
-I scored my predictions based on root mean squared error (RMSE). 
+My objective of this project was to have a [recall](https://en.wikipedia.org/wiki/Precision_and_recall) higher than 95% and optimize the [F1 score](https://en.wikipedia.org/wiki/F1_score) as much as possible. The cost of false negatives  (predicted non-cancerous, but was actually cancerous) were extremely high so I wanted to stick with a model to keep a high recall rate over [precision](https://en.wikipedia.org/wiki/Precision_and_recall). 
+
+Below is the [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) for reference.
+
+![Confusion Matrix](img/confusion_matrix.png)
 
 ### Base Model
 
+I started off my project with a baseline model so I would have something to compare to. I used a simple method that would randomly classify images with the same ratio of non-cancerous (90.8%) and cancerous (9.2%). 
 
-![Insert Baseline Model Confusion Matrix]()
+With this randomized model, I got a **recall 7.8%,  precision 8.4%, and a F1 score 5.9%**. The below confusion matrix was the predicted total counts.
 
+![Base Model Confusion Matrix](img/base_model_cm.png)
+
+This random model was missing most of the cancerous images and fell extremely short of the desired 95% recall rate. This result wasn’t surprising because it was randomly predicted in an imbalanced dataset. 
+
+<!-- If I have time
 
 ### Basic Pipeline
 
 
-![Insert Photo of Model]()
+![Insert Photo of Model]() -->
+
 
 ### Transfer Learning
 
-![Insert Photo of VGG 16 Model]()
+After numerous repetition on building/editing my convolutional neural network, I ended up  
+incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I remove the last 2 layers with my model with a `sigmoid` activation. You can view the code [here](2.&#32;All&#32;Data&#32;Modeling) for details. 
+
+Here are the accuracy, loss, and recall score after each epoch. With my current AWS instance, each epoch took me about 5.5 minutes so with 20 epochs, it took me about 2 hours to run. 
+
+I was able to observe that the accuracy and loss were steadily improving. I can probably increase the number of epochs to improve my score in the future.
+
+![Accuracy](img/accuracy.png)
+
+![Loss](img/loss.png)
+
+![recall](img/recall.png)
 
 
 ## Model Evaluation
 
-
 ### ROC AUC Curve
+My transfer learning model got an area under the curve (AUC) score of **0.882**. This indicates that my model is overall performing well in distinguishing the correct classes.  
 
-![Insert image]()
+![ROC AUC](img/roc_auc.png)
 
-### Precision Recall Curve
+### Precision-Recall Curve
+The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls higher than 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
 
-![Insert image]()
+
+![Precision-Recall Curve](img/pr_curve.png)
+
+### F1 Score
+
+
 
 ### Confusion Matrix
 
