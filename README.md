@@ -18,7 +18,6 @@
 
 3. [Pipeline](#pipeline)
     - [Base Model](#base-model)
-<!--     - [Basic Pipeline](#basic-pipeline) -->
     - [Transfer Learning](#transfer-learning)
 
 
@@ -61,9 +60,9 @@ After scrapping the images, I ended up having 53 GB worth of images with a [meta
 #### Data Cleaning
 The images had inconsistent sizes so I resized them all to 100 x 100 pixel dimensions. 
 
-I split my training and test set with a 80:20 split and ended up with the below ratio.
+There were 249 images (roughly 1% of the entire dataset) that didn’t have labels to indicate if the patient had cancer or not.  So I decided to drop those images and ended up with a total of 23,653 images. 
 
-There were 249 images (roughly 1% of the entire dataset) that didn’t have labels to indicate if the patient had cancer or not.  So I decided to drop those images and ended up with a total of 23,653 images.  
+I split my training and test set with a 80:20 split and ended up with the below ratio.
 
 - **Train Set: 18,922 images**
 - **Test Set: 4,731 images**
@@ -111,14 +110,6 @@ With this randomized model, I got a **recall 7.8%,  precision 8.4%, and a F1 sco
 
 This random model was missing most of the cancerous images and fell extremely short of the desired 95% recall rate. This result wasn’t surprising because it was randomly predicted in an imbalanced dataset. 
 
-<!-- If I have time
-
-### Basic Pipeline
-
-
-![Insert Photo of Model]() -->
-
-
 ### Transfer Learning
 
 After numerous repetition on building/editing my convolutional neural network, I ended up  
@@ -143,20 +134,42 @@ My transfer learning model got an area under the curve (AUC) score of **0.882**.
 ![ROC AUC](img/roc_auc.png)
 
 ### Precision-Recall Curve
-The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls higher than 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
+The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls higher than 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that recall >= 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
 
 
 ![Precision-Recall Curve](img/pr_curve.png)
 
 ### F1 Score
+In order to confirm I was choosing the best threshold, I plotted all of the F1 scores with a recall >= 95%. Once my recall was above 95%, I wanted to choose a threshold that gave me the highest F1 score to keep balance of the image classification. The red mark had the highest F1 score when my model had a threshold of **0.022247791** (same as the most liberal threshold). 
 
+![F1 Scores](img/f1.png)
 
 
 ### Confusion Matrix
+Using my final threshold of **0.022247791**, I’ve computed the confusion matrix and got my results as below. 
 
-![Insert image]()
+
+![Final CNN](img/final_CNN.png)
+
+My final recall, precision, F1 score, accurcay are listed below.
+
+| Metric     | Score |
+| ---------- | ----- |
+| Recall     | 0.952 |
+| Precision  | 0.204 |
+| F1 Score   | 0.335 |
+| Accuracy   | 0.654 |
+
 
 ### Application
+
+I believe my model can coexist in the current medical industry. This model can be incorporated in an app where customers can upload pictures of their moles and to check their probability of being cancerous or not.  The model will have 2 separate ways of approaching the predicted classification. 
+
+First, if the model predicts negatively, there is a 95% likelihood that it’s not cancerous. With this first step, I’m able to classify roughly 57% of the people that most likely don’t have cancer. The caveat is that there is still a 5% chance that it can be cancerous so it wouldn’t be definitive. 
+
+Second, if the model predicts positively, I would first inform the user not to panic because 80% of the time, it’s a false positive. However, on the flip side, there is a 20% chance it could be cancerous. I would recommend the user to go through checkups so that in the case it is cancerous, it can be detected early. 
+
+Overall this model can help people detect cancer at an early stage and ultimately increase survival rate. However, since most people don’t have cancer, 34% of the people will have false positives and it may cause panic to some people. So explaining the classification model will be very important.
 
 
 ---
@@ -164,17 +177,19 @@ The graph below is my model’s Precision-Recall Curve.  The area highlighted in
 ## Future works
 
 ### Possible ways to improve pipeline
+Some possible ways to improve this model would be to use bigger pixel sizes for each image (currently at 100x100), use oversampling methods such as image augmentation, incorporate more metadata features (Eg. age, gender, etc.), and invest more time in tuning the convolutional neural network (CNN) (Eg. adjust parameters, increase layers, increase epochs, etc.). All of these will involve creating AWS with better specs which can be costly. 
 
 ### Build App
-
+In the future, I can try building an app. The users can upload photos of their moles and it would return a `positive` or `negative` of it being cancerous. I would include the explanation of the classification as mentioned earlier.
 
 ---
 
 
 ## Built With
 
-* **Software Packages:**  [Python](https://www.python.org/),  [Pandas](https://pandas.pydata.org/docs/), [Numpy](https://numpy.org/), [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/), [Scikit-Learn](https://scikit-learn.org/), [Matplotlib](https://matplotlib.org/), [Scipy](https://docs.scipy.org/doc/), [Seaborn](https://seaborn.pydata.org/)
-* **Prediction Methods:** Gradient Boosting, Random Forest, XGBoost, Ada Boost, Random Forest.
+* **Software Packages:**  [Python](https://www.python.org/),  [Tensorflow](https://www.tensorflow.org/), [Keras](https://www.tensorflow.org/guide/keras), [Pandas](https://pandas.pydata.org/docs/), [Numpy](https://numpy.org/), [cURL](https://curl.haxx.se/), [Scikit-Learn](https://scikit-learn.org/), [Matplotlib](https://matplotlib.org/), [Scipy](https://docs.scipy.org/doc/), [Seaborn](https://seaborn.pydata.org/)
+* **Server:** [Amazon Web Service (AWS)](https://aws.amazon.com/), [EC2](https://aws.amazon.com/ec2/), [S3](https://aws.amazon.com/s3/)
+* **Classification Methods:** Convolutional Neural Network
 ## Author
 
 * **Takeshi Sugiyama** - *Data Scientist*
