@@ -104,7 +104,7 @@ Below is the [confusion matrix](https://en.wikipedia.org/wiki/Confusion_matrix) 
 
 I started off my project with a baseline model so I would have something to compare to. I used a simple method that would randomly classify images with the same ratio of non-cancerous (90.8%) and cancerous (9.2%). 
 
-With this randomized model, I got a **recall 7.8%,  precision 8.4%, and a F1 score 5.9%**. The below confusion matrix was the predicted total counts.
+With this randomized model, I got a **recall 8.3%,  precision 8.6%, and a F1 score 8.4%**. The below confusion matrix was the predicted total counts.
 
 ![Base Model Confusion Matrix](img/base_model_cm.png)
 
@@ -132,19 +132,19 @@ My transfer learning model got an area under the curve (AUC) score of **0.882**.
 ![ROC AUC](img/roc_auc.png)
 
 ### Precision-Recall Curve
-The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls >= 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that recall >= 95% threshold mark, the most liberal threshold I have for more my model is **0.022247791**. 
+The graph below is my model’s Precision-Recall Curve.  The area highlighted in red are all recalls >= 95%. As mentioned earlier, I’m building a model that has a recall of 95% or higher. Given that recall >= 95% threshold mark, the most liberal threshold I have for my model is **0.17948207**. 
 
 
 ![Precision-Recall Curve](img/pr_curve.png)
 
 ### F1 Score
-In order to confirm I was choosing the best threshold, I plotted all of the F1 scores. The area highlighted in red are all recalls >= 95%. Once my recall was above 95%, I wanted to choose a threshold that gave me the highest F1 score to keep balance of the image classification. The location on the orange star gave me the highest F1 score given that recall >= 95% with a threshold of **0.022247791** (same as the most liberal threshold). 
+In order to confirm I was choosing the best threshold, I plotted all of the F1 scores. The area highlighted in red are all recalls >= 95%. Once my recall was above 95%, I wanted to choose a threshold that gave me the highest F1 score to keep balance of the image classification. The location on the orange star gave me the highest F1 score given that recall >= 95% with a threshold of **0.17885771**. 
 
 ![F1 Scores](img/f1.png)
 
 
 ### Confusion Matrix
-Using my final threshold of **0.022247791**, I’ve got my results as shown below. 
+Using my final threshold of **0.17885771**, I’ve got my results as shown below. 
 
 
 ![Final CNN](img/final_CNN.png)
@@ -152,19 +152,19 @@ Using my final threshold of **0.022247791**, I’ve got my results as shown belo
 
 | Metric     | Score |
 | ---------- | ----- |
-| Recall     | 0.952 |
-| Precision  | 0.204 |
-| F1 Score   | 0.335 |
-| Accuracy   | 0.654 |
+| Recall     | 0.954 |
+| Precision  | 0.217 |
+| F1 Score   | 0.352 |
+| Accuracy   | 0.679 |
 
 
 ### Application
 
 I believe my model can coexist in the current medical industry. This model can be incorporated in an app where customers can upload pictures of their moles and to check their probability of being cancerous or not.  The model will have 2 separate ways of approaching the predicted classification. 
 
-First, if the model predicts negatively, there is a 95% likelihood that it’s not cancerous. With this first step, I’m able to classify roughly 57% of the people that most likely don’t have cancer. The caveat is that there is still a 5% chance that it can be cancerous so it wouldn’t be definitive. 
+First, if the model predicts the mole negatively, it's most like non-cancerous. With this first step, I’m able to classify roughly 60% of the people that most likely don’t have cancer. The caveat is that there is still a 0.7% chance that it can be cancerous so it wouldn’t be definitive. 
 
-Second, if the model predicts positively, I would first inform the user not to panic because 80% of the time, it’s a false positive. However, on the flip side, there is a 20% chance it could be cancerous. I would recommend the user to go through checkups so that in the case it is cancerous, it can be detected early. 
+Second, if the model predicts positively, I would first inform the user not to panic because roughly 78% of the time, it’s a false positive. However, on the flip side, there is a 22% chance it could be cancerous. I would recommend the user to go through checkups so that in the case it is cancerous, it can be detected early. 
 
 Overall this model can help people detect cancer at an early stage and ultimately increase survival rate. However, since most people don’t have cancer, 34% of the people will have false positives and it may cause panic to some people. So explaining the classification model will be very important.
 
