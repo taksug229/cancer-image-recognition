@@ -115,7 +115,7 @@ This random model was missing most of the cancerous images and fell extremely sh
 After numerous repetition on building/editing my convolutional neural network, I ended up  
 incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I remove the last 2 layers with my model with a `sigmoid` activation. You can view the code [here](1.&#32;Modeling.ipynb) for details. 
 
-Here are the accuracy and loss score after each epoch. With my current AWS instance, each epoch took me about 5.5 minutes so with 20 epochs, it took me about 2 hours to run. 
+Here are the accuracy and loss score after each epoch. With my current AWS instance, each epoch took me about 10 minutes so with 20 epochs, it took me about 3 hours in total. 
 
 I was able to observe that the accuracy and loss were steadily improving. I can probably increase the number of epochs to improve my score in the future.
 
@@ -127,7 +127,7 @@ I was able to observe that the accuracy and loss were steadily improving. I can 
 ## Model Evaluation
 
 ### ROC AUC Curve
-My transfer learning model got an area under the curve (AUC) score of **0.882**. This indicates that my model is overall performing well in distinguishing the correct classes.  
+My transfer learning model got an area under the curve (AUC) score of **0.886**. This indicates that my model is overall performing well in distinguishing the correct classes.  
 
 ![ROC AUC](img/roc_auc.png)
 
