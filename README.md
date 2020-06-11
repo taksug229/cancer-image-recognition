@@ -2,6 +2,8 @@
 
 ![Cover](img/cover.jpg)
 
+*3 min presentation of this project can be viewed [here](https://youtu.be/oWQYO66rP10)
+
 ## Table of Contents
 1. [Introduction](#introduction)
     - [Background](#background)
@@ -46,6 +48,7 @@ Cancer is one of the leading causes of death in the world. The World Health Orga
 Studies consistently [show](https://www.who.int/news-room/detail/03-02-2017-early-cancer-diagnosis-saves-lives-cuts-treatment-costs) that early cancer diagnosis saves lives and cuts treatment costs . 
 
 I wanted to be a part of the solution in helping people detect cancer early. So I decided to build a skin cancer recognition model using 23.9K images from the [International Skin Imaging Collaboration (ISIC)](https://www.isic-archive.com/#!/topWithHeader/onlyHeaderTop/gallery). The images were all moles in the skin that were labeled either melanoma or not. 
+
 
 ### AWS Setup
 Since I was dealing with large sets of image data, I decided to set up AWS EC2 instances to process and store the images. I decided to set up 2 [t3.2xlarge](https://aws.amazon.com/ec2/instance-types/t3/) server instances with 150 GB of storage. One instance was for building the neural network pipeline and another was for training the pipeline on the image dataset. By having 2 server instances, I could build and run the pipeline simultaneously. 
@@ -113,11 +116,11 @@ This random model was missing most of the cancerous images and fell extremely sh
 ### Transfer Learning
 
 After numerous repetition on building/editing my convolutional neural network, I ended up  
-incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I remove the last 2 layers with my model with a `sigmoid` activation. You can view the code [here](1.&#32;Modeling.ipynb) for details. 
+incorporating transfer learning using [VGG16](https://keras.io/api/applications/vgg/#vgg16-function).  I removed the last convolution and dense layers with my model with a `sigmoid` activation. You can view the code [here](1.&#32;Modeling.ipynb) for details. 
 
 Here are the accuracy and loss score after each epoch. With my current AWS instance, each epoch took me about 10 minutes so with 20 epochs, it took me about 3 hours in total. 
 
-I was able to observe that the accuracy and loss were steadily improving. I can probably increase the number of epochs to improve my score in the future.
+I was able to observe that the accuracy and loss were pretty stagnant after 20 epochs. Therefore, I decided that there were no need for additional epochs considering the computational costs.
 
 ![Accuracy](img/accuracy.png)
 
@@ -164,9 +167,9 @@ I believe my model can coexist in the current medical industry. This model can b
 
 First, if the model predicts the mole negatively, it's most like non-cancerous. With this first step, I’m able to classify roughly 60% of the people that most likely don’t have cancer. The caveat is that there is still a 0.7% chance that it can be cancerous so it wouldn’t be definitive. 
 
-Second, if the model predicts positively, I would first inform the user not to panic because roughly 78% of the time, it’s a false positive. However, on the flip side, there is a 22% chance it could be cancerous. I would recommend the user to go through checkups so that in the case it is cancerous, it can be detected early. 
+Second, if the model predicts positively, I would first inform the user not to panic because roughly 78% of the time, it’s a false positive. However, on the flip side, there is a roughly 22% chance it could be cancerous. I would recommend the user to go through checkups so that in the case it is cancerous, it can be detected early. 
 
-Overall this model can help people detect cancer at an early stage and ultimately increase survival rate. However, since most people don’t have cancer, 34% of the people will have false positives and it may cause panic to some people. So explaining the classification model will be very important.
+Overall this model can help people detect cancer at an early stage and ultimately increase survival rate. However, since most people don’t have cancer, 31.7% of the people will have false positives and it may cause panic to some people. So explaining the characteristics about this model will be very important.
 
 
 ---
